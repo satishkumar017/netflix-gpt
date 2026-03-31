@@ -1,6 +1,13 @@
 # Netflix GPT
 created React app with Vite as bundler 
 configured tailwind css
+built header
+had routing applied 
+login form 
+sign up form 
+form validation
+useRef hook
+
 
 
 # features
@@ -10,6 +17,7 @@ configured tailwind css
 
 -Browse(after authentication)
     -Header
+      
     -mainMovie
       -trailer in bg
       -title and description
