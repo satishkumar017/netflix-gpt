@@ -1,8 +1,19 @@
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { ValidateForm } from "../Utils/ValidateForm";
+import { auth } from "../Utils/firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../Utils/userSlice";
 
 const SignInUpForm = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const Email = useRef();
   const Password = useRef();
   const Username = useRef();
@@ -12,14 +23,82 @@ const SignInUpForm = () => {
     setIsSignInForm(!isSignInForm);
     seterrorMessage({});
   };
-  const handleButtonClick = (e) => {
+  const handleButtonClick = async (e) => {
     e.preventDefault();
+    //the message here is the object the error obj returns from thr validateform
     const message = ValidateForm(
       Email.current.value,
       Password.current.value,
       isSignInForm ? null : Username.current.value,
     );
-    seterrorMessage(message);
+    //if i write if(message) return ..here its basically the message is object so event an empty object will be considered and it stops the execution
+    if (Object.keys(message).length > 0) {
+      seterrorMessage(message);
+      return;
+    }
+    try {
+      if (isSignInForm) {
+        const { user } = await signInWithEmailAndPassword(
+          auth,
+          Email.current.value,
+          Password.current.value,
+        );
+        navigate("/browse");
+      } else {
+        const { user } = await createUserWithEmailAndPassword(
+          auth,
+          Email.current.value,
+          Password.current.value,
+        );
+        await updateProfile(auth.currentUser, {
+          displayName: Username.current.value,
+          photoURL:
+            "https://img.freepik.com/free-photo/closeup-scarlet-macaw-from-side-view-scarlet-macaw-closeup-head_488145-3540.jpg?semt=ais_incoming&w=740&q=80",
+        });
+        dispatch(
+          addUser({
+            uid: auth.currentUser.uid,
+            email: auth.currentUser.email,
+            displayName: auth.currentUser.displayName,
+            photoURL: auth.currentUser.photoURL
+          }),
+        );
+        navigate("/browse");
+      }
+    } catch (error) {
+      let firebaseErrors = {};
+
+      switch (error.code) {
+        case "auth/user-not-found":
+          firebaseErrors.email = "User not found";
+          break;
+
+        case "auth/wrong-password":
+          firebaseErrors.password = "Incorrect password";
+          break;
+
+        case "auth/email-already-in-use":
+          firebaseErrors.email = "Email already registered";
+          break;
+
+        case "auth/invalid-email":
+          firebaseErrors.email = "Invalid email format";
+          break;
+
+        case "auth/weak-password":
+          firebaseErrors.password = "Password should be at least 6 characters";
+          break;
+        // this states in login if email does not exist and password is wrong
+        case "auth/invalid-credential":
+          firebaseErrors.general = "Invalid email or password";
+          break;
+
+        default:
+          firebaseErrors.general = error.message; // catch all other errors
+      }
+
+      seterrorMessage(firebaseErrors); // update the form
+    }
   };
 
   return (
@@ -31,6 +110,12 @@ const SignInUpForm = () => {
         <h1 className="text-3xl font-bold mb-4">
           {isSignInForm ? "Sign In" : "Sign Up"}
         </h1>
+        {/* catch all firebase error */}
+        {errorMessage.general && (
+          <p className="py-2 my-1 px-3 w-full font-semibold text-red-700">
+            {errorMessage.general}
+          </p>
+        )}
         {!isSignInForm && (
           <input
             ref={Username}
