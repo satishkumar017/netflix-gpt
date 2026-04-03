@@ -10,6 +10,7 @@ import {
 
 import { useDispatch } from "react-redux";
 import { addUser } from "../Utils/userSlice";
+import { USER_AVATAR } from "../Utils/constants";
 
 const SignInUpForm = () => {
   const dispatch = useDispatch();
@@ -52,8 +53,8 @@ const SignInUpForm = () => {
         );
         await updateProfile(auth.currentUser, {
           displayName: Username.current.value,
-          photoURL:
-            "https://img.freepik.com/free-photo/closeup-scarlet-macaw-from-side-view-scarlet-macaw-closeup-head_488145-3540.jpg?semt=ais_incoming&w=740&q=80",
+          photoURL:USER_AVATAR
+            
         });
         dispatch(
           addUser({
