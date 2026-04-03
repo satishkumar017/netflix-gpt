@@ -2,17 +2,40 @@ import React from "react";
 import { auth } from "../Utils/firebase";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-
+import { useSelector,useDispatch } from "react-redux";
+import { onAuthStateChanged } from "firebase/auth";
+import { addUser, removeUser } from "../Utils/userSlice";
+import { useEffect } from "react";
 
 const Header = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleSignOut = async() => {
     await signOut(auth);
-    navigate('/')
   }
   const user = useSelector(state => state.user);
-  console.log(user)
+    // ("unsubscribe is provided by Firebase to stop a listener. useEffect is used to control when to start and stop that listener using its cleanup function.");
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        dispatch(
+          addUser({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+          }),
+        );
+        navigate('/browse')
+      } else {
+        dispatch(removeUser());
+        navigate('/')
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="px-6 py-2 absolute bg-gradient-to-b h-32 from-black z-10 w-full flex justify-between">
       <img

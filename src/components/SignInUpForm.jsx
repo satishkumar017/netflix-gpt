@@ -7,13 +7,13 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+
 import { useDispatch } from "react-redux";
 import { addUser } from "../Utils/userSlice";
 
 const SignInUpForm = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const Email = useRef();
   const Password = useRef();
   const Username = useRef();
@@ -43,7 +43,7 @@ const SignInUpForm = () => {
           Email.current.value,
           Password.current.value,
         );
-        navigate("/browse");
+        
       } else {
         const { user } = await createUserWithEmailAndPassword(
           auth,
@@ -62,8 +62,7 @@ const SignInUpForm = () => {
             displayName: auth.currentUser.displayName,
             photoURL: auth.currentUser.photoURL
           }),
-        );
-        navigate("/browse");
+        );  
       }
     } catch (error) {
       let firebaseErrors = {};

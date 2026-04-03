@@ -13,7 +13,7 @@ Used onAuthStateChanged to persist user sessions and track authentication state 
 ntegrated Redux to manage global user state.
 Synced Firebase authentication data with Redux store.
 Manually updated Redux store with user profile details after authentication.
-
+Redirect user to login page and not have access to browse page if not logged in 
 
 
 # features
