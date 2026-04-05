@@ -38,7 +38,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="px-6 py-2 absolute bg-gradient-to-b h-32 from-black z-10 w-full flex justify-between">
+    <div className="px-6 py-2 absolute bg-gradient-to-b  from-black to-transparent z-10 w-full flex justify-between">
       <img
         src={LOGO}
         alt="background netflix img"

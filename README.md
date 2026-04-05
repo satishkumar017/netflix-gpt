@@ -17,7 +17,18 @@
 -add hardcoded codes in constant file
 -BROWSE PAGE -Beginning
 =regster and create TMDB app and get access token
--get data from TMDB "now playing movie list"
+-get data from TMDB "now playing movie list"(fetch)
+-creating custom hooks(useNowPlayngMovies)
+-create MovieSlice
+-update store with movie data 
+-planning for mainconductir and secondary conductor
+-fetch data fior trailer video by accessing video api in TMdb
+-update store with trailer video data 
+-embed the youtube video and make it autoplay and mute
+-tailwind classes to main container to make main container look awesome 
+
+
+
 
 
 # features
