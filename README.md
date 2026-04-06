@@ -26,6 +26,12 @@
 -update store with trailer video data 
 -embed the youtube video and make it autoplay and mute
 -tailwind classes to main container to make main container look awesome 
+-Secondary Conatiner building
+-fetched api for toprated,upcoming using hooks
+-MoviesList
+-Built movie card
+-TmDb image Cdn Url (constants)
+
 
 
 
